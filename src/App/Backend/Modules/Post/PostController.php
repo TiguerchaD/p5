@@ -47,14 +47,14 @@ class PostController extends BackController
 
     public function executeShow(Request $request)
     {
-        $id = $request->getQueryParams('GET')['id'];
+        $id = $request->getQueryParams()['id'];
 
         $post = $this->getEntityById('post', $id);
 
         if (empty($post)) {
             $redirectionResponse = (new Response())
                 ->withStatus(404, 'Not found');
-            throw new RedirectException($redirectionResponse,'Redirection');
+            throw new RedirectException($redirectionResponse,'L\'article n\'existe pas');
         }
 
         $currentUser = $this->app->getCurrentUser()->getAttribute('user');
@@ -66,8 +66,6 @@ class PostController extends BackController
                 ->withStatus(301, 'redirection')
                 ->withHeader('Location', $url);
             throw new RedirectException($redirectionResponse,'Redirection');
-
-
         }
 
         $comments = $this->managers->getManagerOf('Comment')->getListOF($post);
@@ -206,18 +204,9 @@ class PostController extends BackController
                         ->withStatus(404, 'Not found');
                     throw new RedirectException($redirectionResponse,'Redirection');
                 }
-                $currentUser = $this->app->getCurrentUser()->getAttribute('user');
 
-                if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $post->getUser()->getId()) {
-                    $this->app->getCurrentUser()->setFlash('Accès refusé');
+                $this->onlySelfAccess($post);
 
-                    $url = '/admin/posts';
-                    $redirectionResponse = (new Response())
-                        ->withStatus(301, 'redirection')
-                        ->withHeader('Location', $url);
-                    throw new RedirectException($redirectionResponse,'Redirection');
-
-                }
             } else {
                 $post = new Post;
             }
@@ -246,5 +235,23 @@ class PostController extends BackController
 
     private function getEntityById(string $entity, int $id){
         return $this->managers->getManagerOf($entity)->getById($id);
+    }
+
+
+    private function onlySelfAccess($post){
+
+        $currentUser = $this->app->getCurrentUser()->getAttribute('user');
+
+        if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $post->getUser()->getId()) {
+            $this->app->getCurrentUser()->setFlash('Accès refusé');
+
+            $url = '/admin/posts';
+            $redirectionResponse = (new Response())
+                ->withStatus(301, 'redirection')
+                ->withHeader('Location', $url);
+           throw new RedirectException($redirectionResponse,'Redirection');
+
+        }
+
     }
 }
