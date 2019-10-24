@@ -188,6 +188,8 @@ class UserController extends BackController
     public function executeDelete(Request $request)
     {
         $this->page->addVar('title', 'Supprimer un utlisateur');
+
+
         $post = $this->managers->getManagerOf('user')->getById($request->getQueryParams()['id']);
         $this->page->addVar('user', $post);
 

@@ -199,9 +199,7 @@ class PostController extends BackController
         } else {
             if (isset($request->getQueryParams()['id'])) {
 
-                $manager = $this->managers->getManagerOf('post');
-
-                $post = $manager->getById($request->getQueryParams()['id']);
+                $post = $this->managers->getManagerOf('post')->getById($request->getQueryParams()['id']);
                 if (empty($post)) {
                     $redirectionResponse = (new Response())
                         ->withStatus(404, 'Not found');
