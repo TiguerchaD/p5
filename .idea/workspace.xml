@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ac0b0350-9e62-421f-8e03-96bd7108fcd3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App/Backend/Config/app.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Backend/Config/app.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App/Backend/Config/routes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Backend/Config/routes.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App/Backend/Modules/Post/PostController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Backend/Modules/Post/PostController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App/Frontend/Config/routes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Frontend/Config/routes.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App/Frontend/Modules/Post/Views/commentsList.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Frontend/Modules/Post/Views/commentsList.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/OpenFram/RedirectException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/OpenFram/RedirectException.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -175,7 +167,7 @@
       <workItem from="1571777977219" duration="1732000" />
       <workItem from="1571832442472" duration="23108000" />
       <workItem from="1571862925785" duration="9187000" />
-      <workItem from="1571922953718" duration="6417000" />
+      <workItem from="1571922953718" duration="7651000" />
     </task>
     <servers />
   </component>
