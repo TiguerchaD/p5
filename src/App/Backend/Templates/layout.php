@@ -27,7 +27,7 @@ use function OpenFram\u;
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.4.3/css/semantic-ui/tabulator_semantic-ui.css"
           rel="stylesheet">
 
-    <link href="../assets/css/material-dashboard.css?v=2.1.1" rel="stylesheet"/>
+    <link href="../assets/css/material-dashboard.min.css" rel="stylesheet"/>
 
     <link href="../assets/css/home-page.css" rel="stylesheet"/>
     <link href="../assets/css/material-kit.min.css?v=2.0.6" rel="stylesheet"/>

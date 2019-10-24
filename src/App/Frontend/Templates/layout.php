@@ -8,8 +8,8 @@ use function OpenFram\u;
 
 <head>
     <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="apple-icon.png">
     <link rel="icon" sizes="32x32" href="favicon.ico" type="image/png">
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <title>
         <?php h($title) ?>
@@ -55,7 +55,7 @@ use function OpenFram\u;
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
 
-    <link href="../assets/css/material-kit.min.css?v=2.0.6" rel="stylesheet"/>
+    <link href="../assets/css/material-kit.min.css" rel="stylesheet"/>
     <link href="../assets/css/home-page.css" rel="stylesheet"/>
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
