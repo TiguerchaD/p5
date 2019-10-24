@@ -148,7 +148,7 @@ class PostController extends BackController
 
         if ($request->getMethod() == 'POST') {
 
-            $this->managers->getManagerOf('post')->delete( $this->app->getRequest()->getQueryParams('GET')['id']);
+            $this->managers->getManagerOf('post')->delete($id);
 
             $this->app->getCurrentUser()->setFlash('L\'article a bien été supprimé');
 
