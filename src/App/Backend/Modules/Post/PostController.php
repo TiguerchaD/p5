@@ -113,6 +113,8 @@ class PostController extends BackController
         $this->page->addVar('postsNumber', $postsNumber);
     }
 
+
+
     public function executeDelete(Request $request)
     {
         $this->page->addVar('title', 'Supprimer un article');
@@ -140,14 +142,13 @@ class PostController extends BackController
                 ->withHeader('Location', $url);
             throw new RedirectException($redirectionResponse,'Redirection');
 
-        }
-
+    }
             $this->page->addVar('post', $post);
 
-        if ($request->getMethod() == 'POST') {
-            $id = $this->app->getRequest()->getQueryParams('GET')['id'];
 
-            $manager->delete($id);
+        if ($request->getMethod() == 'POST') {
+
+            $this->managers->getManagerOf('post')->delete( $this->app->getRequest()->getQueryParams('GET')['id']);
 
             $this->app->getCurrentUser()->setFlash('L\'article a bien été supprimé');
 
