@@ -9,4 +9,3 @@
     <route url="/post-([0-9]+)\.html" module="post" action="show" vars="id"/>
 
 </routes>
-

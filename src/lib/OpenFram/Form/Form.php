@@ -17,7 +17,7 @@ class Form
      */
     public function __construct(Entity $entity)
     {
-        $this->SetEntity($entity);
+        $this->setEntity($entity);
     }
 
     public function add(Field $field)
@@ -64,7 +64,7 @@ class Form
     /**
      * @param Entity $entity
      */
-    public function SetEntity(Entity $entity)
+    public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
     }

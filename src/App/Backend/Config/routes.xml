@@ -31,9 +31,6 @@
     <route url="/admin/comments" module="Comment" action="Index" />
     <route url="/admin/comment-moderate-([0-9]+)\.html" module="Comment" action="Moderate" vars="id"/>
 
-
-
-
-
 </routes>
+
 
