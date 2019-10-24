@@ -21,7 +21,7 @@ class PostController extends BackController
     public function executePreview(Request $request)
     {
         $id = $request->getQueryParams('GET')['id'];
-        $post = $this->managers->getManagerOf('Post')->getById( $id);
+        $post = $this->getEntityById('post', $id);
         $currentUser = $this->app->getCurrentUser()->getAttribute('user');
 
         if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $post->getUser()->getId() && $post->isVisible() == 0) {
@@ -47,9 +47,9 @@ class PostController extends BackController
 
     public function executeShow(Request $request)
     {
-        $manager = $this->managers->getManagerOf('Post');
+        $id = $request->getQueryParams('GET')['id'];
 
-        $post = $manager->getById( $request->getQueryParams('GET')['id']);
+        $post = $this->getEntityById('post', $id);
 
         if (empty($post)) {
             $redirectionResponse = (new Response())
@@ -117,9 +117,9 @@ class PostController extends BackController
     {
         $this->page->addVar('title', 'Supprimer un article');
 
-        $manager =  $this->managers->getManagerOf('post');
+        $id = $request->getQueryParams()['id'];
 
-        $post =$manager->getById($request->getQueryParams()['id']);
+        $post = $this->getEntityById('post', $id);
 
         if (empty($post)) {
             $redirectionResponse = (new Response())
@@ -241,5 +241,9 @@ class PostController extends BackController
         }
 
         $this->page->addVar('form', $form->createView());
+    }
+
+    private function getEntityById(string $entity, int $id){
+        return $this->managers->getManagerOf($entity)->getById($id);
     }
 }
