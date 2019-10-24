@@ -205,7 +205,13 @@ class PostController extends BackController
                     throw new RedirectException($redirectionResponse,'Redirection');
                 }
 
-                $this->onlySelfAccess($post);
+               if($this->needSelfAccess($post) === false){
+                   $url = '/admin/posts';
+                   $redirectionResponse = (new Response())
+                       ->withStatus(301, 'redirection')
+                       ->withHeader('Location', $url);
+                   throw new RedirectException($redirectionResponse,'Accés refusé');
+               }
 
             } else {
                 $post = new Post;
@@ -238,20 +244,14 @@ class PostController extends BackController
     }
 
 
-    private function onlySelfAccess($post){
+    private function needSelfAccess($post){
 
         $currentUser = $this->app->getCurrentUser()->getAttribute('user');
-
+        $hasAccess = true;
         if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $post->getUser()->getId()) {
-            $this->app->getCurrentUser()->setFlash('Accès refusé');
 
-            $url = '/admin/posts';
-            $redirectionResponse = (new Response())
-                ->withStatus(301, 'redirection')
-                ->withHeader('Location', $url);
-           throw new RedirectException($redirectionResponse,'Redirection');
-
+            $hasAccess = false;
         }
-
+        return $hasAccess;
     }
 }
