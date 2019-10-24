@@ -116,7 +116,10 @@ class PostController extends BackController
     public function executeDelete(Request $request)
     {
         $this->page->addVar('title', 'Supprimer un article');
-        $post = $this->managers->getManagerOf('post')->getById($request->getQueryParams()['id']);
+
+        $manager =  $this->managers->getManagerOf('post');
+
+        $post =$manager->getById($request->getQueryParams()['id']);
 
         if (empty($post)) {
             $redirectionResponse = (new Response())
@@ -144,7 +147,7 @@ class PostController extends BackController
         if ($request->getMethod() == 'POST') {
             $id = $this->app->getRequest()->getQueryParams('GET')['id'];
 
-            $this->managers->getManagerOf('post')->delete($id);
+            $manager->delete($id);
 
             $this->app->getCurrentUser()->setFlash('L\'article a bien été supprimé');
 

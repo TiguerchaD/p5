@@ -10,6 +10,8 @@ use function OpenFram\u;
     <meta charset="utf-8"/>
     <link rel="apple-touch-icon" sizes="76x76" href="apple-icon.png">
     <link rel="icon" sizes="32x32" href="favicon.ico" type="image/png">
+    <link rel="manifest" href="site.webmanifest">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <title>
         <?php h($title) ?>
