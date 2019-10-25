@@ -56,12 +56,12 @@ class CommentController extends \OpenFram\BackController
         $currentUser = $this->app->getCurrentUser()->getAttribute('user');
 
         if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $targetComment->getPost()->getUser()->getId()) {
-            $this->app->getCurrentUser()->setFlash('Accès refusé');
+
             $url = '/admin/comments';
             $redirectionResponse = (new Response())
                 ->withStatus(301, 'redirection')
                 ->withHeader('Location', $url);
-            throw new RedirectException($redirectionResponse,'Redirection');
+            throw new RedirectException($redirectionResponse,'Accès refusé','error');
         }
 
 
@@ -88,34 +88,31 @@ class CommentController extends \OpenFram\BackController
 
             if (isset($request->getParsedBody()['valid'])) {
                 $manager->validate($request->getParsedBody()['valid']);
-                $this->app->getCurrentUser()->setFlash('Le commentaire à été validé ');
                 $url = '/admin/comments';
                 $redirectionResponse = (new Response())
                     ->withStatus(301, 'redirection')
                     ->withHeader('Location', $url);
-                throw new RedirectException($redirectionResponse,'Redirection');
+                throw new RedirectException($redirectionResponse,'Le commentaire à été validé ','success');
 
             }
 
             if (isset($request->getParsedBody()['invalid'])) {
                 $manager->invalidate($request->getParsedBody()['invalid']);
-                $this->app->getCurrentUser()->setFlash('Le commentaire à été caché ');
                 $url = '/admin/comments';
                 $redirectionResponse = (new Response())
                     ->withStatus(301, 'redirection')
                     ->withHeader('Location', $url);
-                throw new RedirectException($redirectionResponse,'Redirection');
+                throw new RedirectException($redirectionResponse,'Le commentaire à été caché ', 'success');
 
             }
 
             if (isset($request->getParsedBody()['delete'])) {
                 $manager->delete($request->getParsedBody()['delete']);
-                $this->app->getCurrentUser()->setFlash('Le commentaire à été supprimé ');
                 $url = '/admin/comments';
                 $redirectionResponse = (new Response())
                     ->withStatus(301, 'redirection')
                     ->withHeader('Location', $url);
-                throw new RedirectException($redirectionResponse,'Redirection');
+                throw new RedirectException($redirectionResponse,'Le commentaire à été supprimé ', 'success');
             }
         } else {
             return;

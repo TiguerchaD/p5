@@ -9,22 +9,6 @@ use function OpenFram\u;
         validation: <?php h($nonValidCommentsNumber ?? '') ?></p>
     <p class="bg-light rounded float-right p-2 mx-2 colored-shadow">Commentaires: <?php h($commentsNumber ?? '')?></p>
 
-    <?php if ($currentUser->hasFlash()) { ?>
-        <div class="alert alert-success">
-            <div class="container">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="material-icons">clear</i></span>
-                </button>
-                <b>Success Alert:</b> <?php h($currentUser->getFlash()) ?>
-            </div>
-        </div>
-
-    <?php } ?>
-
-
     <div id="comments-table" class="card"></div>
 
 </div>

@@ -1,7 +1,9 @@
 <?php
+
 use function OpenFram\escape_to_html as h;
 use function OpenFram\escape_to_json as j;
 use function OpenFram\u;
+
 ?>
 
 <!DOCTYPE html>
@@ -59,6 +61,25 @@ use function OpenFram\u;
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
+
+                    <?php if ($currentUser->hasFlash()) {
+                        $flash = $currentUser->getFlash();
+                        ?>
+                        <div class="col-12">
+                            <div class="alert alert-<?= h($flash['type']) ?>">
+                                <div class="container">
+                                    <div class="alert-icon">
+                                        <i class="material-icons">check</i>
+                                    </div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                                    </button>
+                                    <b>Alert:</b> <?php h($flash['message']) ?>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php } ?>
 
                     <?= $content ?>
 

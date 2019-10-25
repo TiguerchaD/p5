@@ -118,6 +118,8 @@ class UserController extends BackController
             throw new RedirectException($redirectionResponse, 'L\'utilisateur demandé n\'existe pas', 'error');
         }
 
+        $this->requireSelfAccess($user->getId());
+
 
         $imageUrl = $this->fileUploader->getFile($user->getId());
         $user->setProfileImage($imageUrl);

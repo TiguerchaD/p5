@@ -11,7 +11,7 @@ use function OpenFram\escape_to_html as h;
 class UserManagerPDO extends UserManager
 {
 
-    public function getList($option = [])
+    public function getList($options = [])
     {
         $sql = 'SELECT * FROM User ';
 

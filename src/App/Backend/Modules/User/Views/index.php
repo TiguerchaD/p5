@@ -9,22 +9,6 @@ use function OpenFram\u;
     <a href="/admin/user-insert.html" class="btn btn-primary">Ajouter <i class="material-icons">add_circle</i></a>
     <p class="bg-light rounded float-right p-2 colored-shadow">Utilisateurs : <?php h($usersNumber) ?></p>
 
-    <?php if ($currentUser->hasFlash()) { ?>
-        <div class="alert alert-success">
-            <div class="container">
-                <div class="alert-icon">
-                    <i class="material-icons">check</i>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="material-icons">clear</i></span>
-                </button>
-                <b>Success Alert:</b> <?php h($currentUser->getFlash()) ?>
-            </div>
-        </div>
-
-    <?php } ?>
-
-
     <div id="posts-table" class="card"></div>
 
 </div>

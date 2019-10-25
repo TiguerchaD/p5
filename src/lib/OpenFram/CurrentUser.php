@@ -11,19 +11,20 @@ class CurrentUser extends ApplicationComponent
 
     public function hasFlash()
     {
-        return isset($_SESSION['flash']);
+        return  isset($_SESSION['flash']);
     }
 
     public function getFlash()
     {
         $flash = $_SESSION['flash'];
         unset($_SESSION['flash']);
+
         return $flash;
     }
 
-    public function setFlash($flash)
+    public function setFlash($type, $message)
     {
-        $_SESSION['flash'] = $flash;
+        $_SESSION['flash'] = ['type'=>$type,'message'=> $message];
     }
 
 
