@@ -44,8 +44,6 @@ class UserController extends BackController
                 'userName' => $user->getUserName(),
                 'email' => $user->getEmail(),
                 'role' => $user->getRole()->getName(),
-
-
                 'viewLink' => '/admin/user-' . $user->getId() . '.html',
                 'editLink' => '/admin/user-edit-' . $user->getId() . '.html',
                 'deleteLink' => '/admin/user-delete-' . $user->getId() . '.html',
@@ -181,7 +179,7 @@ class UserController extends BackController
 
 
             $this->app->getCurrentUser()->setFlash($user->isNew() ? 'L\'utlisateur a bien été ajouté' : 'L\'utlisateur a bien été mis à jour');
-            $url = '/admin/user-' . htmlspecialchars(urlencode($user->getId())) . '.html';
+            $url = '/admin/user-' . htmlspecialchars(urlencode($id)) . '.html';
             $redirectionResponse = (new Response())
                 ->withStatus(301, 'redirection')
                 ->withHeader('Location', $url);
@@ -194,13 +192,9 @@ class UserController extends BackController
     public function executeDelete(Request $request)
     {
 
-
-
         $user = $this->managers->getManagerOf('user')->getById($request->getQueryParams()['id']);
         $imageUrl = $this->fileUploader->getFile($user->getId());
         $user->setProfileImage($imageUrl);
-
-
 
         if ($request->getMethod() == 'POST') {
             $id = $request->getQueryParams('GET')['id'];
@@ -208,7 +202,6 @@ class UserController extends BackController
             $this->managers->getManagerOf('user')->delete($id);
 
             $this->fileUploader->deleteFile($id);
-
 
 
             $this->app->getCurrentUser()->setFlash('L\'utlisateur a bien été supprimé');
