@@ -27,7 +27,7 @@ use function OpenFram\u;
             <div class="card card-profile">
                 <div class="card-avatar">
                     <a href="#pablo">
-                        <img class="img" src="..<?php h($user->getProfileImage())?>" .jpg"/>
+                        <img class="img" src="..<?php h($user->getProfileImage())?>"/>
                     </a>
                 </div>
                 <div class="card-body">

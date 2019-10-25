@@ -9,6 +9,7 @@ use FormBuilder\UserFormBuilder;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
+use OpenFram\Application;
 use OpenFram\BackController;
 use OpenFram\Form\FormHandler;
 use OpenFram\RedirectException;
@@ -18,6 +19,14 @@ use function OpenFram\u;
 
 class UserController extends BackController
 {
+    private $fileUploader;
+
+    public function __construct(Application $app, $module, $action)
+    {
+        parent::__construct($app, $module, $action);
+        $this->fileUploader = new FileUploader($app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
+    }
+
     public function executeIndex(Request $request)
     {
         $this->page->addVar('title', 'Utilisateurs');
@@ -72,8 +81,7 @@ class UserController extends BackController
         }
 
 
-        $imageUploader = new FileUploader($this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
-        $imageUrl = $imageUploader->getFile($user->getId());
+        $imageUrl = $this->fileUploader->getFile($user->getId());
         $user->setProfileImage($imageUrl);
 
 
@@ -96,9 +104,7 @@ class UserController extends BackController
         }
 
 
-
-        $imageUploader = new FileUploader($this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
-        $imageUrl = $imageUploader->getFile($user->getId());
+        $imageUrl = $this->fileUploader->getFile($user->getId());
         $user->setProfileImage($imageUrl);
 
 
@@ -123,7 +129,6 @@ class UserController extends BackController
 
     private function processForm(Request $request)
     {
-
         if ($request->getMethod() == 'POST') {
             $file = $request->getUploadedFiles()["profileImage"];
             if ($file->getError() === 4) {
@@ -155,6 +160,8 @@ class UserController extends BackController
         } else {
             if (isset($request->getQueryParams()['id'])) {
                 $user = $this->managers->getManagerOf('user')->getById($request->getQueryParams()['id']);
+                $imageUrl = $this->fileUploader->getFile($user->getId());
+                $user->setProfileImage($imageUrl);
             } else {
                 $user = new User;
             }
@@ -169,8 +176,7 @@ class UserController extends BackController
 
 
             if ($user->getProfileImage() !== null) {
-                $fileUploader = new FileUploader($request->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
-                $fileUploader->uploadFile($user->getProfileImage() ,$id);
+                $this->fileUploader->uploadFile($user->getProfileImage() ,$id);
             }
 
 
@@ -187,20 +193,21 @@ class UserController extends BackController
 
     public function executeDelete(Request $request)
     {
-        $this->page->addVar('title', 'Supprimer un utlisateur');
 
 
-        $post = $this->managers->getManagerOf('user')->getById($request->getQueryParams()['id']);
-        $this->page->addVar('user', $post);
+
+        $user = $this->managers->getManagerOf('user')->getById($request->getQueryParams()['id']);
+        $imageUrl = $this->fileUploader->getFile($user->getId());
+        $user->setProfileImage($imageUrl);
+
 
 
         if ($request->getMethod() == 'POST') {
-            $id = $this->app->getRequest()->getQueryParams('GET')['id'];
+            $id = $request->getQueryParams('GET')['id'];
 
             $this->managers->getManagerOf('user')->delete($id);
 
-            $fileUploader = new FileUploader($request->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
-            $fileUploader->deleteFile($id);
+            $this->fileUploader->deleteFile($id);
 
 
 
@@ -212,6 +219,9 @@ class UserController extends BackController
             throw new RedirectException($redirectionResponse, 'Redirection');
 
         }
+
+        $this->page->addVar('title', 'Supprimer un utlisateur');
+        $this->page->addVar('user', $user);
     }
 }
 
