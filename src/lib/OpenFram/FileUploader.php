@@ -79,7 +79,4 @@ class FileUploader
         $this->entityName = $entityName;
     }
 
-
-
-
 }
