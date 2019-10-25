@@ -8,6 +8,7 @@ use FormBuilder\LoginFormBuilder;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use OpenFram\RedirectException;
+use function OpenFram\u;
 
 class ConnectionController extends \OpenFram\BackController
 {
@@ -25,6 +26,10 @@ class ConnectionController extends \OpenFram\BackController
 
 
             $user = $this->managers->getManagerOf('User')->getByUserName($userName);
+
+            $imagePath = $this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($user->getId()) . '.jpg';
+            $url = file_exists($imagePath) ? '/images/user/user-' . u($user->getId()) . '.jpg' : '/images/user/user-default.jpg';
+            $user->setProfileImage($url);
 
 
             if ($user !== null  &&  $user->verifyPassword($password)) {

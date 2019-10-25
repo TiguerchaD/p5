@@ -12,6 +12,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 use OpenFram\BackController;
 use OpenFram\Form\FormHandler;
 use OpenFram\RedirectException;
+use OpenFram\FileUploader;
 use function OpenFram\escape_to_html as h;
 use function OpenFram\u;
 
@@ -53,14 +54,13 @@ class UserController extends BackController
     {
         $manager = $this->managers->getManagerOf('User');
 
-        $user = $manager->getById($request->getQueryParams('GET')['id']);
+        $user = $manager->getById($request->getQueryParams()['id']);
 
         $currentUser = $this->app->getCurrentUser()->getAttribute('user');
 
         if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $user->getId()) {
             $this->app->getCurrentUser()->setFlash('Accès refusé');
-            throw new RedirectException('/admin/user-edit-' . htmlspecialchars(urlencode($currentUser->getId())) . '.html',
-                301, 'Redirection');
+            throw new RedirectException('/admin/user-edit-' . htmlspecialchars(urlencode($currentUser->getId())) . '.html', 301, 'Redirection');
 
         }
 
@@ -71,9 +71,10 @@ class UserController extends BackController
             throw new RedirectException($redirectionResponse, 'Redirection');
         }
 
-        $imagePath = $this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($user->getId()) . '.jpg';
-        $url = file_exists($imagePath) ? '/images/user/user-' . u($user->getId()) . '.jpg' : '/images/user/user-default.jpg';
-        $user->setProfileImage($url);
+
+        $imageUploader = new FileUploader($this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
+        $imageUrl = $imageUploader->getFile($user->getId());
+        $user->setProfileImage($imageUrl);
 
 
         $this->page->addVar('title', $user->getUserName());
@@ -96,9 +97,9 @@ class UserController extends BackController
 
 
 
-        $imagePath = $this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($user->getId()) . '.jpg';
-        $url = file_exists($imagePath) ? '/images/user/user-' . u($user->getId()) . '.jpg' : '/images/user/user-default.jpg';
-        $user->setProfileImage($url);
+        $imageUploader = new FileUploader($this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
+        $imageUrl = $imageUploader->getFile($user->getId());
+        $user->setProfileImage($imageUrl);
 
 
 
@@ -164,13 +165,12 @@ class UserController extends BackController
         $form = $formBuilder->getFrom();
         $formHandler = new FormHandler($form, $this->managers->getManagerOf('user'), $request);
 
-        if (false !== $formHandler->process()) {
+        if (false !== $id = $formHandler->process()) {
 
-            $id = $formHandler->process();
 
             if ($user->getProfileImage() !== null) {
-                $imageTarget = $this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($id) . '.jpg';
-               $user->getProfileImage()->moveTo($imageTarget);
+                $fileUploader = new FileUploader($request->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
+                $fileUploader->uploadFile($user->getProfileImage() ,$id);
             }
 
 
@@ -199,10 +199,8 @@ class UserController extends BackController
 
             $this->managers->getManagerOf('user')->delete($id);
 
-            $imagePath = $this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($id) . '.jpg';
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
+            $fileUploader = new FileUploader($request->getServerParams()['DOCUMENT_ROOT'] . '/images/user/', 'user');
+            $fileUploader->deleteFile($id);
 
 
 
