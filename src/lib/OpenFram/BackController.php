@@ -3,6 +3,8 @@
 
 namespace OpenFram;
 
+use GuzzleHttp\Psr7\Response;
+
 class BackController extends ApplicationComponent
 {
     protected $module = '';
@@ -88,5 +90,23 @@ class BackController extends ApplicationComponent
     public function getManagers(): ?Managers
     {
         return $this->managers;
+    }
+
+    /**
+     * @param $userId
+     * @return void
+     * @throws RedirectException
+     */
+    protected function requireSelfAccess($userId)
+    {
+
+        $currentUser = $this->app->getCurrentUser()->getAttribute('user');
+
+        if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $userId) {
+            $redirectionResponse = (new Response())
+                ->withStatus(301, 'Redirection')
+                ->withHeader('Location', '/admin/');
+            throw new RedirectException($redirectionResponse, 'Accés refusé', 'warning');
+        }
     }
 }

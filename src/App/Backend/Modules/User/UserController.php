@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Backend\Modules\User;
 
 use Entity\User;
@@ -13,17 +12,37 @@ use OpenFram\Form\FormHandler;
 use OpenFram\RedirectException;
 use OpenFram\FileUploader;
 
+/**
+ * Class UserController
+ *
+ * @package App\Backend\Modules\User
+ */
 class UserController extends BackController
 {
+    /**
+     * @var FileUploader
+     */
     private $fileUploader;
 
+    /**
+     * UserController constructor.
+     *
+     * @param Application $app
+     * @param $module
+     * @param $action
+     */
     public function __construct(Application $app, $module, $action)
     {
         parent::__construct($app, $module, $action);
-        $this->fileUploader = new FileUploader($app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/',
-            'user');
+        $this->fileUploader = new FileUploader(
+            $app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/',
+            'user'
+        );
     }
 
+    /**
+     * @param Request $request
+     */
     public function executeIndex(Request $request)
     {
         $this->page->addVar('title', 'Utilisateurs');
@@ -47,13 +66,16 @@ class UserController extends BackController
             ];
         }
 
-
         $this->page->addVar('dataTable', $dataTable);
 
         $this->page->addVar('usersList', $manager->getList());
         $this->page->addVar('usersNumber', $manager->count());
     }
 
+    /**
+     * @param Request $request
+     * @throws RedirectException
+     */
     public function executeEdit(Request $request)
     {
         $manager = $this->managers->getManagerOf('User');
@@ -63,21 +85,15 @@ class UserController extends BackController
         if (empty($user)) {
             $redirectionResponse = (new Response())
                 ->withStatus(404, 'Not found');
-            throw new RedirectException($redirectionResponse, 'L\'utilisateur n\'existe pas', 'error');
+
+            $message = 'L\'utilisateur n\'existe pas';
+            throw new RedirectException($redirectionResponse, $message, 'error');
         }
 
-
-        $currentUser = $this->app->getCurrentUser()->getAttribute('user');
-
-        if ($currentUser->getRole()->getId() != 1 && $currentUser->getId() !== $user->getId()) {
-            $redirectionResponse = (new Response())
-                ->withStatus(301, 'Redirection');
-            throw new RedirectException($redirectionResponse, 'Accés refusé', 'warning');
-        }
+        $this->requireSelfAccess($user->getId());
 
         $imageUrl = $this->fileUploader->getFile($user->getId());
         $user->setProfileImage($imageUrl);
-
 
         $this->page->addVar('title', $user->getUserName());
         $this->page->addVar('user', $user);
@@ -85,11 +101,16 @@ class UserController extends BackController
         $this->processForm($request);
     }
 
+    /**
+     * @param Request $request
+     * @throws RedirectException
+     */
     public function executeShow(Request $request)
     {
         $manager = $this->managers->getManagerOf('User');
 
         $user = $manager->getById($request->getQueryParams('GET')['id']);
+
 
         if (empty($user)) {
             $redirectionResponse = (new Response())
@@ -109,6 +130,10 @@ class UserController extends BackController
     }
 
 
+    /**
+     * @param Request $request
+     * @throws RedirectException
+     */
     public function executeInsert(Request $request)
     {
         $this->processForm($request);
@@ -116,6 +141,10 @@ class UserController extends BackController
         $this->page->addVar('title', 'Ajouter un utilisateur');
     }
 
+    /**
+     * @param Request $request
+     * @throws RedirectException
+     */
     private function processForm(Request $request)
     {
         if ($request->getMethod() == 'POST') {
@@ -125,18 +154,21 @@ class UserController extends BackController
             }
             $roleManager = $this->managers->getManagerOf('role');
 
-            $user = new User([
-                'firstName' => $request->getParsedBody()["firstName"],
-                'lastName' => $request->getParsedBody()["lastName"],
-                'userName' => $request->getParsedBody()["userName"],
-                'email' => $request->getParsedBody()["email"],
-                'confirmEmail' => $request->getParsedBody()["confirmEmail"],
-                'password' => $request->getParsedBody()["password"],
-                'confirmPassword' => $request->getParsedBody()["confirmPassword"],
-                'role' => $roleManager->getById($request->getParsedBody()["role"]),
-                'description' => $request->getParsedBody()["description"],
-                'profileImage' => $file,
-            ]);
+            $user = new User(
+                [
+                    'firstName' => $request->getParsedBody()["firstName"],
+                    'lastName' => $request->getParsedBody()["lastName"],
+                    'userName' => $request->getParsedBody()["userName"],
+                    'email' => $request->getParsedBody()["email"],
+                    'confirmEmail' => $request->getParsedBody()["confirmEmail"],
+                    'password' => $request->getParsedBody()["password"],
+                    'confirmPassword' => $request->getParsedBody()["confirmPassword"],
+                    'role' => $roleManager->getById($request->getParsedBody()["role"]),
+                    'description' => $request->getParsedBody()["description"],
+                    'profileImage' => $file,
+                ]
+            );
+
             $user->setHashedPassword();
 
 
@@ -167,7 +199,6 @@ class UserController extends BackController
                 $this->fileUploader->uploadFile($user->getProfileImage(), $id);
             }
 
-
             $message = $user->isNew() ? 'L\'utlisateur a bien été ajouté' : 'L\'utlisateur a bien été mis à jour';
             $url = '/admin/user-' . urlencode($id) . '.html';
             $redirectionResponse = (new Response())
@@ -179,6 +210,10 @@ class UserController extends BackController
         $this->page->addVar('form', $form->createView());
     }
 
+    /**
+     * @param Request $request
+     * @throws RedirectException
+     */
     public function executeDelete(Request $request)
     {
 
@@ -188,6 +223,9 @@ class UserController extends BackController
                 ->withStatus(404, 'Not found');
             throw new RedirectException($redirectionResponse, 'L\'utilisateur n\'existe pas', 'error');
         }
+
+        $this->requireSelfAccess($user->getId());
+
 
         $imageUrl = $this->fileUploader->getFile($user->getId());
 
@@ -207,9 +245,9 @@ class UserController extends BackController
             throw new RedirectException($redirectionResponse, 'L\'utlisateur a bien été supprimé', 'success');
 
         }
-
         $this->page->addVar('title', 'Supprimer un utlisateur');
         $this->page->addVar('user', $user);
     }
+
 }
 

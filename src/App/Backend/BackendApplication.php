@@ -5,6 +5,7 @@ namespace App\Backend;
 use App\Backend\Modules\Connexion\ConnexionController;
 use App\Frontend\Modules\Connection\ConnectionController;
 use GuzzleHttp\Psr7\Response;
+use OpenFram\Page;
 use OpenFram\RedirectException;
 use function GuzzleHttp\Psr7\stream_for;
 use function Http\Response\send;
@@ -23,6 +24,7 @@ class BackendApplication extends \OpenFram\Application
      */
     public function run()
     {
+
         try {
             $controller = $this->getController();
 
@@ -49,7 +51,20 @@ class BackendApplication extends \OpenFram\Application
             $page = $controller->getPage()->getGeneratedPage();
             send($this->response->withBody(stream_for($page)));
         }catch (RedirectException $e){
-            $e->run();
+
+            if($e->getCode() === 404){
+                $page = new Page($this);
+                $page->addVar('title', 'Erreur 404');
+                $page->addVar('message', $e->getMessage());
+                $page->addVar('pageType', 'Erreur 404');
+                $page->addVar('module', $controller->getModule());
+
+                $page->setContentFile(__DIR__.'/../../Errors/404.php');
+
+                $e->run($page->getGeneratedPage());
+            }else{
+                $e->run();
+            }
         }
     }
 }

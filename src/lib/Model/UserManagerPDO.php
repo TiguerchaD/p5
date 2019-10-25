@@ -11,19 +11,19 @@ use function OpenFram\escape_to_html as h;
 class UserManagerPDO extends UserManager
 {
 
-    public function getList($offset = -1, $limit = -1)
+    public function getList($option = [])
     {
         $sql = 'SELECT * FROM User ';
-        if ($offset != -1 || $limit != -1) {
-            $sql .= ' LIMIT :limit  OFFSET :offset ';
-        }
+
+        $sql .= (isset($options['limit'])) ? ' LIMIT :limit ' : ' ';
+        $sql .= (isset($options['offset'])) ? ' OFFSET :offset ' : ' ';
 
         $query = $this->dao->prepare($sql);
 
-        if ($offset != -1 || $limit != -1) {
-            $query->bindValue(':limit', $limit, \PDO::PARAM_INT);
-            $query->bindValue(':offset', $offset, \PDO::PARAM_INT);
-        }
+        (isset($options['offset'])) ? $query->bindValue(':offset', $options['offset'], PDO::PARAM_INT) : null;
+        (isset($options['limit'])) ? $query->bindValue(':limit', $options['limit'], PDO::PARAM_INT) : null;
+
+
         $query->execute();
         $query = $this->dao->query($sql);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\User');
@@ -70,7 +70,6 @@ class UserManagerPDO extends UserManager
             $query->closeCursor();
 
             $user->setRole($roleManager->getById($user->roleId));
-
 
 
             return $user;

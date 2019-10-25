@@ -30,11 +30,13 @@ class FrontendApplication extends Application
 
         } catch (RedirectException $e) {
             if($e->getCode() === 404){
+
                 $page = new Page($this);
                 $page->addVar('title', 'Erreur 404');
                 $page->addVar('message', $e->getMessage());
                 $page->addVar('pageType', 'Erreur 404');
                 $page->setContentFile(__DIR__.'/../../Errors/404.php');
+
 
                 $e->run($page->getGeneratedPage());
             }else{

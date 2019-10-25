@@ -19,7 +19,7 @@ abstract class PostManager extends Manager
     public function save(Post $post)
     {
         if ($post->isValid()) {
-            $post->isNew() ? $this->add($post) : $this->update($post);
+            return $post->isNew() ? $this->add($post) : $this->update($post);
         } else {
             throw new RuntimeException('L\'article doit être valide pour être enregistré');
         }

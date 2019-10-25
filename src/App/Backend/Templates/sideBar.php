@@ -27,7 +27,7 @@ use function OpenFram\u;
                 </a>
             </li>
 
-            <li class="nav-item  <?= ($module == 'Profil') ? 'active' : ''?> ">
+            <li class="nav-item  <?= (isset($user) && $currentUser->getAttribute('user')->getId() === ($user->getId())) ? 'active' : ''?> ">
                 <a class="nav-link" href="/admin/user-<?php h(u($currentUser->getAttribute('user')->getId()))?>.html">
                     <i class="material-icons">Profil</i>
                     <p>Profil</p>
@@ -47,7 +47,7 @@ use function OpenFram\u;
                 </a>
             </li>
             <?php if ($currentUser->hasAccessTo('User', 'Index')) { ?>
-                <li class="nav-item  <?= ($module == 'User') ? 'active' : ''?>">
+                <li class="nav-item  <?= ($module == 'User' &&  !(isset($user) && $currentUser->getAttribute('user')->getId() === ($user->getId()))) ? 'active' : ''?>">
                     <a class="nav-link" href="/admin/users">
                         <i class="material-icons">User</i>
                         <p>Users</p>

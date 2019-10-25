@@ -148,10 +148,7 @@ class PostManagerPDO extends PostManager
         $query->execute();
 
 
-        if ($post->getFeaturedImage() !== null) {
-            $imageTarget = ServerRequest::fromGlobals()->getServerParams()['DOCUMENT_ROOT'] . '/images/post/post-' . $this->dao->lastInsertId() . '.jpg';
-            $post->getFeaturedImage()->moveTo($imageTarget);
-        }
+        return $this->dao->lastInsertId();
     }
 
     public function update(Post $post)
@@ -176,10 +173,7 @@ class PostManagerPDO extends PostManager
 
         $query->execute();
 
-        if ($post->getFeaturedImage() !== null) {
-            $imageTarget = ServerRequest::fromGlobals()->getServerParams()['DOCUMENT_ROOT'] . '/images/post/post-' . $post->getId() . '.jpg';
-            $post->getFeaturedImage()->moveTo($imageTarget);
-        }
+        return $post->getId() ;
     }
 
     /**
@@ -196,11 +190,5 @@ class PostManagerPDO extends PostManager
 
         $query->execute();
 
-        $imagePath = ServerRequest::fromGlobals()->getServerParams()['DOCUMENT_ROOT'] . '/images/post/post-' . htmlspecialchars($id) . '.jpg';
-
-
-        if (file_exists($imagePath)) {
-            unlink($imagePath);
-        }
     }
 }
