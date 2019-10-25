@@ -12,8 +12,9 @@ class RedirectException extends \Exception
 {
 
     protected $response;
+    protected $messageType = '';
 
-    public function __construct(Response $response , ?string $message)
+    public function __construct(Response $response , ?string $message, $messageType = '')
     {
         parent::__construct(
             $message ? (string)$message :  $response->getReasonPhrase(),
@@ -21,6 +22,7 @@ class RedirectException extends \Exception
         );
 
         $this->response = $response;
+        $this->messageType = $messageType;
     }
 
     public function getResponse()
@@ -31,5 +33,10 @@ class RedirectException extends \Exception
     public function run($page = null)
     {
         send($this->response->withBody(stream_for($page)));
+    }
+
+    public function getMessageType()
+    {
+        return $this->messageType;
     }
 }
