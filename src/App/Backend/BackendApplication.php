@@ -33,34 +33,36 @@ class BackendApplication extends \OpenFram\Application
                 $redirectionResponse = (new Response())
                     ->withStatus(301, 'Fedirection')
                     ->withHeader('Location', $url);
-                throw new RedirectException($redirectionResponse,'Merci de vous authentifier','info');
+                throw new RedirectException($redirectionResponse, 'Merci de vous authentifier', 'info');
             }
 
             if (!$this->currentUser->hasAccess()) {
-                $url = '/admin/';
+
+                $url = ($this->currentUser->getAttribute('user')->getRole()->getId() == 3) ? '/' : '/admin/';
                 $redirectionResponse = (new Response())
                     ->withStatus(301, 'redirection')
                     ->withHeader('Location', $url);
-                throw new RedirectException($redirectionResponse,'Vous avez pas les permissions nécessaires','danger');
+                throw new RedirectException($redirectionResponse, 'Vous avez pas les permissions nécessaires',
+                    'danger');
             }
 
             $controller->execute();
             $controller->getpage()->addVar('module', $controller->getModule());
             $page = $controller->getPage()->getGeneratedPage();
             send($this->response->withBody(stream_for($page)));
-        }catch (RedirectException $e){
+        } catch (RedirectException $e) {
 
-            if($e->getCode() === 404){
+            if ($e->getCode() === 404) {
                 $page = new Page($this);
                 $page->addVar('title', 'Erreur 404');
                 $page->addVar('message', $e->getMessage());
                 $page->addVar('pageType', 'Erreur 404');
                 $page->addVar('module', $controller->getModule());
 
-                $page->setContentFile(__DIR__.'/../../Errors/404.php');
+                $page->setContentFile(__DIR__ . '/../../Errors/back404.php');
 
                 $e->run($page->getGeneratedPage());
-            }else{
+            } else {
                 $this->currentUser->setFlash($e->getMessageType(), $e->getMessage());
                 $e->run();
             }

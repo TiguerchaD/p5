@@ -57,7 +57,9 @@ use function OpenFram\u;
     <!-- CSS Files -->
 
     <link href="../assets/css/material-kit.min.css" rel="stylesheet"/>
+
     <link href="../assets/css/home-page.css" rel="stylesheet"/>
+
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <!-- <link href="../assets/demo/demo.css" rel="stylesheet" /> -->
@@ -93,21 +95,6 @@ use function OpenFram\u;
 
 <?php include 'navigation.php'; ?>
 
-
-<?php if ($currentUser->hasFlash()) { ?>
-    <div class="alert alert-success">
-        <div class="container">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true"><i class="material-icons">clear</i></span>
-            </button>
-            <b>Success Alert:</b> <?php h($currentUser->getFlash()) ?>
-        </div>
-    </div>
-
-<?php } ?>
 
 
 <?= $content ?>
@@ -168,6 +155,8 @@ use function OpenFram\u;
 <script src="../assets/js/plugins/jquery.sharrre.js" type="text/javascript"></script>
 <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
 <script src="../assets/js/material-kit.min.js?v=2.0.6" type="text/javascript"></script>
+<script src="../assets/js/plugins/jasny-bootstrap.min.js"></script>
+
 <script>
     $(document).ready(function () {
 

@@ -7,7 +7,7 @@ use function OpenFram\u;
      style="background-image: url('./assets/img/bg2.jpg');">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 ml-auto mr-auto">
+            <div class="col-md-12 ml-auto mr-auto">
                 <div class="brand text-center">
 
                     <h1><?php h($title) ?></h1>
@@ -16,5 +16,5 @@ use function OpenFram\u;
                 </div>
             </div>
         </div>
-    </div>
+</div>
 </div>

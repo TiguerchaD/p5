@@ -4,6 +4,10 @@
     <route url="/connection" module="Connection" action="login"/>
     <route url="/logout" module="Connection" action="logout"/>
 
+    <route url="/profile" module="Profile" action="show"/>
+    <route url="/delete" module="Profile" action="delete"/>
+    <route url="/register" module="Profile" action="insert"/>
+
     <route url="/posts-([0-9]+)\.html" module="Post" action="index" vars="page"/>
 
     <route url="/post-([0-9]+)\.html" module="post" action="show" vars="id"/>

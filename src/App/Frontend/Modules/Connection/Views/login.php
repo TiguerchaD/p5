@@ -11,20 +11,25 @@ use function OpenFram\escape_to_html as h;
             <div class="col-lg-4 col-md-6 ml-auto mr-auto">
 
                 <div class="card card-login">
-
-                    <?php if ($currentUser->hasFlash()) { ?>
-                        <div class="alert alert-danger  text-center">
+                    <?php
+                    if ($currentUser->hasFlash()) {
+                        $flash = $currentUser->getFlash();
+                        ?>
+                        <div class="alert alert-<?= h($flash['type']) ?>">
                             <div class="container">
                                 <div class="alert-icon">
-                                    <i class="material-icons">error_outline</i>
+                                    <i class="material-icons">check</i>
                                 </div>
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true"><i class="material-icons">clear</i></span>
                                 </button>
-                                <b>Echec de connexion:</b> <?php h($currentUser->getFlash()) ?>
+                                <b>Alert:</b> <?php h($flash['message']) ?>
                             </div>
                         </div>
+
                     <?php } ?>
+
+
 
                     <form class="form" method="post" action="/connection">
                         <div class="card-header card-header-primary text-center">
@@ -48,7 +53,7 @@ use function OpenFram\escape_to_html as h;
                             <p class = "col-12 ml-auto mr-auto text-center">Pas encore inscrit ? </p>
                             <div class = "ml-auto mr-auto text-center">
 
-                                <a class="nav-link btn btn-primary" href="/admin/signin">
+                                <a class="nav-link btn btn-primary" href="/register">
                                     <i class="material-icons">account_circle</i> S'inscrire
                                 </a>
                             </div>

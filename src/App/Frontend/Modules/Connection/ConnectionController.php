@@ -27,31 +27,28 @@ class ConnectionController extends \OpenFram\BackController
 
             $user = $this->managers->getManagerOf('User')->getByUserName($userName);
 
-            $imagePath = $this->app->getRequest()->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($user->getId()) . '.jpg';
-            $url = file_exists($imagePath) ? '/images/user/user-' . u($user->getId()) . '.jpg' : '/images/user/user-default.jpg';
-            $user->setProfileImage($url);
-
-
             if ($user !== null  &&  $user->verifyPassword($password)) {
                 $this->app->getCurrentUser()->setAuthenticated(true);
                 $this->app->getCurrentUser()->setAttribute('user', $user);
+
+                $imagePath = $request->getServerParams()['DOCUMENT_ROOT'] . '/images/user/user-' . u($user->getId()) . '.jpg';
+                $url = file_exists($imagePath) ? '/images/user/user-' . u($user->getId()) . '.jpg' : '/images/user/user-default.jpg';
+                $user->setProfileImage($url);
+
                 if ($this->app->getCurrentUser()->hasAttribute('lastUrl')) {
                     $url = $this->app->getCurrentUser()->getAttribute('lastUrl');
-                    $redirectionResponse = (new Response())
-                        ->withStatus(301, 'redirection')
-                        ->withHeader('Location', $url);
 
-                    throw new RedirectException($redirectionResponse ,'Redirection');
                 } else {
                     $url = '/admin/';
-                    $redirectionResponse = (new Response())
-                        ->withStatus(301, 'redirection')
-                        ->withHeader('Location', $url);
-                    throw new RedirectException($redirectionResponse,'Redirection');
-
                 }
+                $redirectionResponse = (new Response())
+                    ->withStatus(301, 'redirection')
+                    ->withHeader('Location', $url);
+
+                throw new RedirectException($redirectionResponse ,'Connexion réussie','success');
+
             } else {
-                $this->app->getCurrentUser()->setFlash('Le userName ou le mot de passe est incorrect');
+                $this->app->getCurrentUser()->setFlash('danger','Le userName ou le mot de passe est incorrect');
             }
         } else {
             $connection = new Connection();
@@ -69,16 +66,19 @@ class ConnectionController extends \OpenFram\BackController
 
     public function executeLogout(Request $request)
     {
+
         session_destroy();
 
-        $this->page->addVar('title', 'Déconnexion');
-        $this->page->addVar('user', $this->app->getCurrentUser()->getAttribute('user'));
+        $url = '/connection';
 
-        $this->getApp()->getCurrentUser()->setFlash('Déconnexion réussie');
-        $url = '/';
         $redirectionResponse = (new Response())
             ->withStatus(301, 'redirection')
             ->withHeader('Location', $url);
-        throw new RedirectException($redirectionResponse,'Redirection');
+
+        throw new RedirectException($redirectionResponse,'Déconnexion réussie','success');
+
+
+
+
     }
 }

@@ -70,7 +70,7 @@ use function OpenFram\escape_to_html as h;
                             <a href="/logout" class="dropdown-item">
                                 <i class="material-icons">power_settings_new</i> Se déconnecter
                             </a>
-                            <a href="/admin/" class="dropdown-item">
+                            <a href="/profile" class="dropdown-item">
                                 <i class="material-icons">content_paste</i> Profile
                             </a>
                         </div>
@@ -83,7 +83,7 @@ use function OpenFram\escape_to_html as h;
                         </a>
                     </li>
                     <li class="nav-item ">
-                        <a class="nav-link btn btn-primary" href="/admin/login/">
+                        <a class="nav-link btn btn-primary" href="/register">
                             <i class="material-icons">account_circle</i> S'inscrire
                         </a>
                     </li>

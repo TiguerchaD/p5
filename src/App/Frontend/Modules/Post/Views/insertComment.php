@@ -1,4 +1,4 @@
-<form name="sentMessage" id="contactForm" action="" method="post">
+<form name="sentMessage" action="" method="post">
 
     <div class="control-group">
 

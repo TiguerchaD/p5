@@ -12,7 +12,6 @@ use OpenFram\Form\Form;
 use OpenFram\Form\FormHandler;
 use GuzzleHttp\Psr7\Response;
 use OpenFram\RedirectException;
-use function OpenFram\escape_to_html as h;
 use function OpenFram\u;
 
 class PostController extends BackController
@@ -63,10 +62,11 @@ class PostController extends BackController
         }
 
 
+
         if (empty($post)) {
             $redirectionResponse = (new Response())
                 ->withStatus(404, 'Not found');
-            throw new RedirectException($redirectionResponse,'Redirection');
+            throw new RedirectException($redirectionResponse,'Not Found','danger');
 
         }
 
@@ -93,7 +93,7 @@ class PostController extends BackController
                 $redirectionResponse = (new Response())
                     ->withStatus(301, 'redirection')
                     ->withHeader('Location', $url);
-                throw new RedirectException($redirectionResponse,'Redirection');
+                throw new RedirectException($redirectionResponse,'Redirection','success');
             }
 
 
@@ -120,15 +120,13 @@ class PostController extends BackController
 
         $formHandler = new FormHandler($form, $this->managers->getManagerOf('comment'), $request);
 
-        if ($formHandler->process()) {
-            $this->app->getCurrentUser()->setFlash('Votre commentaitre a bien été ajouté, merci!');
-            $url = 'post-' . htmlspecialchars(urlencode($request->getQueryParams()['id'])) . '.html#commentForm';
+        if ($formHandler->process() != false) {
+            $url = '/post-' . u($request->getQueryParams()['id']) . '.html#commentsList';
             $redirectionResponse = (new Response())
                 ->withStatus(301, 'redirection')
                 ->withHeader('Location', $url);
-            throw new RedirectException($redirectionResponse,'Redirection');
+            throw new RedirectException($redirectionResponse,'Votre commentaitre a bien été ajouté, merci!','success');
         }
-
 
         $this->page->addVar('comment', $comment);
         $this->page->addVar('form', $form->createView());

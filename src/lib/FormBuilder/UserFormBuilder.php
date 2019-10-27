@@ -18,18 +18,21 @@ class UserFormBuilder extends FormBuilder
 {
     public function build()
     {
-        $controller =  $this->app->getController();
+        $controller = $this->app->getController();
         $manager = $controller->getManagers()->getMAnagerOf('role');
-        $currentUser = $this->app->getCurrentUser()->getAttribute('user');
         $options = [];
-        if ($currentUser->getRole()->getId() == 1) {
-            $rolesList = $manager->getList();
-            foreach ($rolesList as $role) {
-                $options [$role->getId()] = $role->getName();
+
+        if($this->app->getCurrentUser()->hasAttribute('user')){
+            $roleId = $this->app->getCurrentUser()->getAttribute('user')->getRole()->getId();
+            if ($roleId == 1) {
+                $rolesList = $manager->getList();
+                foreach ($rolesList as $role) {
+                    $options [$role->getId()] = $role->getName();
+                }
             }
-        } else {
-            $options [$currentUser->getRole()->getId()] = $currentUser->getRole()->getName();
         }
+
+
 
 
         $this->form->add(
@@ -61,7 +64,7 @@ class UserFormBuilder extends FormBuilder
                         ['min' => 2, 'max' => 255]
                     ),
                 ]
-                ])
+            ])
         )->add(new InputField([
             'openingGroupTags' => '<div class="col-md-4">',
             'closingGroupTags' => '</div>',
@@ -79,7 +82,7 @@ class UserFormBuilder extends FormBuilder
                     ['min' => 2, 'max' => 255]
                 ),
             ]
-                ]))->add(new InputField([
+        ]))->add(new InputField([
             'openingGroupTags' => '<div class="col-md-4">',
             'closingGroupTags' => '</div>',
             'label' => 'Votre Pseudo',
@@ -93,7 +96,7 @@ class UserFormBuilder extends FormBuilder
                 new IsNotBlank('Ce champs est obligatoire'),
                 new HasLength('Le champ doit avoir  entre 2 et 255 caractères', ['min' => 2, 'max' => 255]),
             ]
-                ]))->add(new InputRadioField([
+        ]))->add(new InputRadioField([
             'openingGroupTags' => '<div class="col-md-12">',
             'closingGroupTags' => '</div></div>',
             'checkedRadio' => 'Author',
@@ -102,22 +105,22 @@ class UserFormBuilder extends FormBuilder
             'attributes' => [
                 'name' => 'role'
             ]
-                ]))->add(
-                    new InputField([
-                    'openingGroupTags' => '<div class="row"><div class="col-md-6">',
-                    'closingGroupTags' => '</div>',
-                    'label' => 'Votre Email',
-                    'attributes' => [
+        ]))->add(
+            new InputField([
+                'openingGroupTags' => '<div class="row"><div class="col-md-6">',
+                'closingGroupTags' => '</div>',
+                'label' => 'Votre Email',
+                'attributes' => [
                     'type' => 'email',
                     'name' => 'email',
                     'pattern' => '/\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\Z/i',
-                    ],
-                    'validators' => [
+                ],
+                'validators' => [
                     new IsNotBlank('Ce champs est obligatoire'),
                     new HasValidEmailFormat('L\'email doit avoir un format valide')
-                    ]
-                    ])
-                )->add(new InputField([
+                ]
+            ])
+        )->add(new InputField([
             'openingGroupTags' => '<div class="col-md-6">',
             'closingGroupTags' => '</div></div>',
             'label' => 'Confirmez votre Email',
@@ -129,21 +132,21 @@ class UserFormBuilder extends FormBuilder
             'validators' => [
                 new IsConfirmed('Les emails  ne correspendent pas', $this->form->fields[5]->getValue())
             ]
-                ]))->add(
-                    new InputField([
-                    'openingGroupTags' => '<div class="row"><div class="col-md-6">',
-                    'closingGroupTags' => '</div>',
-                    'label' => 'Mot de passe',
-                    'attributes' => [
+        ]))->add(
+            new InputField([
+                'openingGroupTags' => '<div class="row"><div class="col-md-6">',
+                'closingGroupTags' => '</div>',
+                'label' => 'Mot de passe',
+                'attributes' => [
                     'name' => 'password',
                     'type' => 'password'
-                    ],
-                    'validators' => ($this->form->getEntity()->isPasswordRequired()) ? [
+                ],
+                'validators' => ($this->form->getEntity()->isPasswordRequired()) ? [
                     new IsNotBlank('Ce champs est obligatoire'),
                     new HasLength('Le champ doit avoir  entre 2 et 255 caractères', ['min' => 2, 'max' => 255]),
-                    ] : []
-                    ])
-                )->add(new InputField([
+                ] : []
+            ])
+        )->add(new InputField([
             'openingGroupTags' => '<div class="col-md-6">',
             'closingGroupTags' => '</div></div>',
             'label' => 'Confirmer le mot de passe',
@@ -154,17 +157,17 @@ class UserFormBuilder extends FormBuilder
             'validators' => ($this->form->getEntity()->isPasswordRequired()) ? [
                 new IsConfirmed('Les mots de passes ne correspendent pas', $this->form->fields[7]->getValue())
             ] : []
-                ]))->add(
-                    new TextAreaField([
-                    'label' => 'Description',
-                    'attributes' => [
+        ]))->add(
+            new TextAreaField([
+                'label' => 'Description',
+                'attributes' => [
                     'name' => 'description',
-                    ],
-                    'validators' => [
+                ],
+                'validators' => [
                     new IsNotBlank('Ce champs est obligatoire'),
                     new HasLength('Le commentaire doit avoir au minimum 20 caractères', ['min' => 2])
-                    ]
-                    ])
-                );
+                ]
+            ])
+        );
     }
 }

@@ -25,10 +25,12 @@ class FrontendApplication extends Application
         try {
             $controller = $this->getController($this->request->getUri()->getPath());
             $controller->execute();
+
             $page = $controller->getPage()->getGeneratedPage();
             send($this->response->withBody(stream_for($page)));
 
         } catch (RedirectException $e) {
+
             if($e->getCode() === 404){
 
                 $page = new Page($this);
@@ -37,17 +39,14 @@ class FrontendApplication extends Application
                 $page->addVar('pageType', 'Erreur 404');
                 $page->setContentFile(__DIR__.'/../../Errors/404.php');
 
-
                 $e->run($page->getGeneratedPage());
             }else{
-            $e->run();
+
+                $this->currentUser->setFlash($e->getMessageType(), $e->getMessage());
+                $e->run();
             }
 
-
-
         }
-
-
 
     }
 }

@@ -1,8 +1,7 @@
 <?php
 
 use function OpenFram\escape_to_html as h;
-use function OpenFram\escape_to_json as j;
-use function OpenFram\u;
+
 
 ?>
 
@@ -171,8 +170,7 @@ use function OpenFram\u;
 <script src="../assets/js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="../assets/js/material-dashboard.js?v=2.1.1" type="text/javascript"></script>
-<!-- Material Dashboard DEMO methods, don't include it in your project! -->
-<script src="../assets/demo/demo.js"></script>
+
 <script>
     $(document).ready(function () {
         $().ready(function () {

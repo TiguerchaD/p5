@@ -47,17 +47,14 @@ class HomeController extends BackController
         $form = $formBuilder->getFrom();
         $formHandler = new FormHandler($form, $manager, $request);
 
-        if ($formHandler->process()) {
-            $this->app->getCurrentUser()->setFlash('Votre Message a bien été envoyé , merci!');
+        if ($formHandler->process() != false) {
             $url = '/#contactSection';
             $redirectionResponse = (new Response())
                 ->withStatus(301, 'redirection')
                 ->withHeader('Location', $url);
-            throw new RedirectException($redirectionResponse, 301,'Redirection');
+            throw new RedirectException($redirectionResponse, 'Votre Message a bien été envoyé , merci!', 'success');
 
         }
-
-
 
         $this->page->addVar('form', $form->createView());
     }

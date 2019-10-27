@@ -24,6 +24,7 @@ class CommentManagerPDO extends CommentManager
 
 
         $comment->setId($this->dao->lastInsertId());
+        return $this->dao->lastInsertId();
     }
 
     public function getListOf(Post $post)

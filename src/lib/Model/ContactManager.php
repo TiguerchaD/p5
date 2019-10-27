@@ -14,7 +14,7 @@ class ContactManager extends Manager
     public function save(Contact $contact)
     {
         if ($contact->isValid()) {
-            $this->sendMessage($contact);
+           return  $this->sendMessage($contact);
         } else {
             throw new Exception('Le message doit être valide pour être envoyé');
         }
@@ -29,6 +29,6 @@ class ContactManager extends Manager
             'Reply-To: webmaster@example.com' . "\r\n" .
             'X-Emailer: PHP/' . phpversion();
 
-        mail($to, $subject, $message, $headers);
+        return mail($to, $subject, $message, $headers);
     }
 }

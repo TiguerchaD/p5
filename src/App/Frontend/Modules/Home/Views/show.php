@@ -1,45 +1,27 @@
- <?php
- use function OpenFram\escape_to_html as h;
- use function OpenFram\u;
+<?php
 
-    ?>
+use function OpenFram\escape_to_html as h;
+use function OpenFram\u;
+
+?>
 
 <div class="page-header header-filter clear-filter purple-filter" data-parallax="true"
      style="background-image: url('./assets/img/bg2.jpg');  background-position: center;">
     <div class="container">
-            <div class="col-md-8 ml-auto mr-auto">
+        <div class="col-md-8 ml-auto mr-auto">
+            <div class="brand text-center">
+                <h1>Futur Developpeur php Symfony</h1>
+                <h3>En apprentissage intensif à OpenClassrooms</h3>
 
-                    <?php if ($currentUser->hasFlash()) { ?>
-                        <div class="alert alert-danger">
-                            <div class="container">
-                                <div class="alert-icon">
-                                    <i class="material-icons">check</i>
-                                </div>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true"><i class="material-icons">clear</i></span>
-                                </button>
-                                <b>Alert:</b> <?php h($currentUser->getFlash()) ?>
-                            </div>
-                        </div>
+                <a class="btn btn-primary btn-lg btn-round" href="docs/cv.pdf" download>
+                    <i class="material-icons">cloud_download</i> Télécharger mon CV
+                </a>
 
-                    <?php } ?>
-
-                <div class="brand text-center">
-                    <h1>Futur Developpeur php Symfony</h1>
-                    <h3>En apprentissage intensif à OpenClassrooms</h3>
-
-                    <a class="btn btn-primary btn-lg btn-round" href="docs/cv.pdf" download>
-                        <i class="material-icons">cloud_download</i> Télécharger mon CV
-                    </a>
-
-                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
+</div>
 
 
 <div class="main main-raised">
@@ -112,24 +94,27 @@
 
     <div id="contactSection" class="section section-contacts px-3">
 
-        <?php if ($currentUser->hasFlash()) { ?>
-            <div class="alert alert-success">
-                <div class="container">
-                    <div class="alert-icon">
-                        <i class="material-icons">check</i>
-                    </div>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="material-icons">clear</i></span>
-                    </button>
-                    <b>Success Alert:</b> <?php h($currentUser->getFlash()) ?>
-                </div>
-            </div>
-
-        <?php } ?>
-
-
         <div class="row">
             <div class="col-md-8 ml-auto mr-auto">
+                <?php
+                if ($currentUser->hasFlash()) {
+                    $flash = $currentUser->getFlash();
+                    ?>
+                    <div class="alert alert-<?= h($flash['type']) ?>">
+                        <div class="container">
+                            <div class="alert-icon">
+                                <i class="material-icons">check</i>
+                            </div>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                            </button>
+                            <b>Alert:</b> <?php h($flash['message']) ?>
+                        </div>
+                    </div>
+
+                <?php } ?>
+
+
                 <h2 class="text-center title">Contactez moi</h2>
                 <h4 class="text-center description">Divide details about your product or agency work into parts. Write a
                     few lines about each one and contact us about any further collaboration. We will responde get back
