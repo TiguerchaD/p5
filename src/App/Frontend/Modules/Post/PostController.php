@@ -120,7 +120,7 @@ class PostController extends BackController
 
         $formHandler = new FormHandler($form, $this->managers->getManagerOf('comment'), $request);
 
-        if ($formHandler->process() != false) {
+        if ($formHandler->process() !== false) {
             $url = '/post-' . u($request->getQueryParams()['id']) . '.html#commentsList';
             $redirectionResponse = (new Response())
                 ->withStatus(301, 'redirection')

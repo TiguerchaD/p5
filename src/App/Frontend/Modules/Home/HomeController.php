@@ -47,7 +47,7 @@ class HomeController extends BackController
         $form = $formBuilder->getFrom();
         $formHandler = new FormHandler($form, $manager, $request);
 
-        if ($formHandler->process() != false) {
+        if ($formHandler->process() !== false) {
             $url = '/#contactSection';
             $redirectionResponse = (new Response())
                 ->withStatus(301, 'redirection')
